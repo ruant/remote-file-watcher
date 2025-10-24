@@ -1,0 +1,72 @@
+{
+  "name": "remote-file-watcher",
+  "displayName": "Remote File Watcher",
+  "description": "Watch remote files via SSH and execute local commands on change",
+  "version": "1.0.0",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "remoteFileWatcher.openSettings",
+        "title": "Remote File Watcher: Configure Watchers"
+      }
+    ],
+    "configuration": {
+      "title": "Remote File Watcher",
+      "properties": {
+        "remoteFileWatcher.showNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notification popups when files change. Disable to only execute commands silently."
+        },
+        "remoteFileWatcher.watchers": {
+          "type": "array",
+          "default": [
+            {
+              "filePath": ".claude-notification-trigger",
+              "command": "powershell -Command \"(New-Object System.Media.SoundPlayer 'C:\\\\Windows\\\\Media\\\\Alarm02.wav').PlaySync()\""
+            }
+          ],
+          "markdownDescription": "Configure files to watch and commands to execute when they change.\n\n**To configure with GUI:** Open Command Palette (`Ctrl+Shift+P`) and run `Remote File Watcher: Configure Watchers`\n\nOr edit in settings.json below for advanced users.",
+          "editPresentation": "multilineText",
+          "scope": "resource",
+          "items": {
+            "type": "object",
+            "title": "File Watcher",
+            "required": ["filePath", "command"],
+            "properties": {
+              "filePath": {
+                "type": "string",
+                "title": "File Path",
+                "description": "Relative path from workspace root to the file to watch (e.g., .claude-notification-trigger)"
+              },
+              "command": {
+                "type": "string",
+                "title": "Command",
+                "editPresentation": "multilineText",
+                "description": "Command to execute when file changes. Use ${file} as placeholder for the file path."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^18.0.0"
+  }
+}
